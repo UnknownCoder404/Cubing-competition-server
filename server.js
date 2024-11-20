@@ -93,17 +93,3 @@ console.timeEnd("Routes");
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-import Competition from "./Models/competition";
-const oldComp = new Competition({
-    _id: "668fd31dfa72a344cf016d1b",
-    name: "Test",
-    events: [
-        {
-            name: "3x3",
-            rounds: 3,
-        },
-    ],
-    date: String(new Date()),
-});
-await oldComp.save();
