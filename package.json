@@ -3,8 +3,6 @@
     "version": "3.4.1",
     "main": "server.js",
     "scripts": {
-        "bun": "npm install -g bun",
-        "i": "bun install",
         "start": "bun run precheck.js && bun run backup.js && bun run server.js "
     },
     "keywords": [],
