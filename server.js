@@ -26,14 +26,14 @@ if (isRateLimitingEnabled) {
     app.use(generalLimiter);
 } else {
     console.warn(
-        "Rate limiting is disabled. It's recommended to enable it. Use only for development purposes."
+        "Rate limiting is disabled. It's recommended to enable it. Use only for development purposes.",
     );
 }
 if (isCorsEnabled) {
     app.use(cors(corsOptions));
 } else {
     console.warn(
-        "CORS is disabled. It's recommended to enable it. Use only for development purposes."
+        "CORS is disabled. It's recommended to enable it. Use only for development purposes.",
     );
 }
 const compressionOptions = {

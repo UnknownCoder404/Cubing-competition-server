@@ -11,34 +11,34 @@ const backupPath = path.join(__dirname, "../../backups.zip");
 zipFolder(backupsPath, backupPath);
 
 router.get("/", verifyToken, isAdmin, async (req, res) => {
-  try {
-    return res.status(200).sendFile(backupPath);
-  } catch (error) {
-    return res.status(500).json({ message: "Error while getting backup" });
-  }
+    try {
+        return res.status(200).sendFile(backupPath);
+    } catch (error) {
+        return res.status(500).json({ message: "Error while getting backup" });
+    }
 });
 
 function zipFolder(sourceFolder, outPath) {
-  console.time("zipping backups");
-  const output = fs.createWriteStream(outPath);
-  const archive = archiver("zip", {
-    zlib: { level: 9 }, // Sets the compression level.
-  });
+    console.time("zipping backups");
+    const output = fs.createWriteStream(outPath);
+    const archive = archiver("zip", {
+        zlib: { level: 9 }, // Sets the compression level.
+    });
 
-  output.on("close", () => {
-    console.log(`${archive.pointer()} total bytes`);
-    console.log(
-      "Archiver has been finalized and the output file descriptor has closed.",
-    );
-  });
+    output.on("close", () => {
+        console.log(`${archive.pointer()} total bytes`);
+        console.log(
+            "Archiver has been finalized and the output file descriptor has closed.",
+        );
+    });
 
-  archive.on("error", (err) => {
-    throw err;
-  });
+    archive.on("error", (err) => {
+        throw err;
+    });
 
-  archive.pipe(output);
-  archive.directory(sourceFolder, false);
-  archive.finalize();
-  console.timeEnd("zipping backups");
+    archive.pipe(output);
+    archive.directory(sourceFolder, false);
+    archive.finalize();
+    console.timeEnd("zipping backups");
 }
 module.exports = router;
