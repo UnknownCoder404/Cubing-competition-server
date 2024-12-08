@@ -1,0 +1,7 @@
+services:
+    cubing-competition-server:
+        build:
+            context: .
+        image: cubing-competition-server
+        ports:
+            - "3000:3000"
