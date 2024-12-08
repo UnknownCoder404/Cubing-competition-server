@@ -4,6 +4,7 @@
     "main": "server.js",
     "scripts": {
         "start": "bun run precheck.js && bun run backup.js && bun run server.js ",
+        "dev": "bun run --watch server.js",
         "format:write": "prettier . --write --cache",
         "format:check": "prettier . --check --cache"
     },
