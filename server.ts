@@ -1,18 +1,17 @@
-console.time("Imports");
-const express = require("express");
-const mongoose = require("mongoose");
-const dotenv = require("dotenv");
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
 
-const cors = require("cors");
-const corsOptions = require("./config/corsOptions");
-const isCorsEnabled = require("./config/isCorsEnabled");
+import cors from "cors";
+import corsOptions from "./config/corsOptions";
+import isCorsEnabled from "./config/isCorsEnabled";
 
-const compression = require("compression");
-const compressionFilter = require("./config/compressionFilter");
+import compression from "compression";
+import compressionFilter from "./config/compressionFilter";
 
-const generalLimiter = require("./rateLimiter/general");
-const isRateLimitingEnabled = require("./config/isRateLimitingEnabled");
-console.timeEnd("Imports");
+import generalLimiter from "./rateLimiter/general";
+import isRateLimitingEnabled from "./config/isRateLimitingEnabled";
+
 console.log(`Running ${__filename}`);
 // Load the environment variables from the .env file
 dotenv.config();
@@ -38,12 +37,13 @@ if (isCorsEnabled) {
 }
 const compressionOptions = {
     filter: compressionFilter,
-};
+} as const;
 app.use(compression(compressionOptions));
 // Connect to the MongoDB database using mongoose
 console.log("Trying to connect to mongoDB...");
 try {
     console.time("Connect to MongoDB");
+    // @ts-expect-error TODO: We will come back to this later
     await mongoose.connect(process.env.MONGO_URI);
     console.timeEnd("Connect to MongoDB");
 } catch (error) {
@@ -51,7 +51,7 @@ try {
     process.exit(1);
 }
 console.log("Connected to MongoDB");
-console.time("Routes");
+
 // Register and login
 app.use("/register", require("./routes/users/register"));
 app.use("/login", require("./routes/users/login"));
@@ -88,7 +88,7 @@ app.use("/competitions", require("./routes/competitions/lock"));
 app.use("/competitions", require("./routes/competitions/results"));
 // Backup
 app.use("/backup", require("./routes/backup/get"));
-console.timeEnd("Routes");
+
 // Start the server on the specified port
 const PORT = process.env.PORT || 3000;
 

@@ -1,4 +1,6 @@
-function matchesPrLink(url) {
+import { CorsOptions } from "cors";
+
+function matchesPrLink(url: string) {
     try {
         // Parse the URL
         const parsedUrl = new URL(url);
@@ -38,11 +40,11 @@ const allowedOrigins = [
 ];
 
 // CORS middleware function to check the origin against the allowed list
-const corsOptions = {
+const corsOptions: CorsOptions = {
     origin: function (origin, callback) {
         if (
-            allowedOrigins.indexOf(origin) !== -1 ||
             !origin ||
+            allowedOrigins.indexOf(origin) !== -1 ||
             matchesPrLink(origin)
         ) {
             callback(null, true);
@@ -51,6 +53,6 @@ const corsOptions = {
         }
     },
     optionsSuccessStatus: 200, // For legacy browser support
-};
+} as const;
 
-module.exports = corsOptions;
+export default corsOptions;

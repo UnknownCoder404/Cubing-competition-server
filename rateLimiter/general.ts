@@ -1,6 +1,6 @@
-const rateLimit = require("express-rate-limit");
-const isRateLimitingEnabled = require("../config/isRateLimitingEnabled");
-const skip = require("../middleware/skip");
+import rateLimit from "express-rate-limit";
+import isRateLimitingEnabled from "../config/isRateLimitingEnabled";
+import skip from "../middleware/skip";
 // Define the rate limit
 const generalLimiter = isRateLimitingEnabled
     ? rateLimit({
@@ -12,4 +12,4 @@ const generalLimiter = isRateLimitingEnabled
       })
     : skip;
 
-module.exports = generalLimiter;
+export default generalLimiter;
