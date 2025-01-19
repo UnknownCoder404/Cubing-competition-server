@@ -1,5 +1,5 @@
 // Allowed events for competitions
-module.exports = [
+export default [
     "3x3",
     "3x3oh",
     "4x4",
@@ -7,4 +7,4 @@ module.exports = [
     "3x3bld",
     "megaminx",
     "teambld",
-];
+] as const;
