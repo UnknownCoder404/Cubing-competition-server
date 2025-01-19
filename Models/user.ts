@@ -1,11 +1,10 @@
-const mongoose = require("mongoose");
-const verifyPassword = require("../functions/verifyPassword");
-
-const allowedEvents = ["3x3", "3x3oh", "4x4", "2x2"];
+import { Schema, model } from "mongoose";
+import verifyPassword from "../functions/verifyPassword";
+import allowedEvents from "../config/allowedEvents";
 
 // competitionId is the Id of the competition that the user participated in
-const competitionSchema = new mongoose.Schema({
-    competitionId: { type: mongoose.Schema.Types.ObjectId, required: true },
+const competitionSchema = new Schema({
+    competitionId: { type: Schema.Types.ObjectId, required: true },
     events: [
         {
             event: { type: String, required: true, enum: allowedEvents },
@@ -14,7 +13,7 @@ const competitionSchema = new mongoose.Schema({
     ],
 });
 // Define a schema for the user model
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, required: true, enum: ["admin", "user"] },
@@ -22,7 +21,7 @@ const userSchema = new mongoose.Schema({
     group: { type: Number, enum: [1, 2], required: true },
 });
 // Add a method to compare the password with the hashed one
-userSchema.methods.comparePassword = async function (password) {
+userSchema.methods.comparePassword = async function (password: string) {
     try {
         // Return a boolean value indicating the match
         return verifyPassword(password, this.password);
@@ -32,6 +31,6 @@ userSchema.methods.comparePassword = async function (password) {
     }
 };
 // Create a user model from the schema
-const User = mongoose.model("User", userSchema);
+const User = model("User", userSchema);
 
-module.exports = User;
+export default User;

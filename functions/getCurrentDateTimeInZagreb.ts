@@ -16,8 +16,8 @@ function getCurrentDateTimeInZagreb() {
         hour: parseInt(hour),
         minute: parseInt(minute),
         second: parseInt(second),
-    };
+    } as const;
 
     return zagrebDateTimeObj;
 }
-module.exports = getCurrentDateTimeInZagreb;
+export default getCurrentDateTimeInZagreb;

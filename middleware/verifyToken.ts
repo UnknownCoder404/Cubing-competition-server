@@ -1,8 +1,10 @@
-const jwt = require("jsonwebtoken");
-const dotenv = require("dotenv");
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import type { NextFunction, Request, Response } from "express";
+
 dotenv.config();
 // Define a middleware to verify the token
-const verifyToken = async (req, res, next) => {
+const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Get the token from the request header or from parameters in the URL
         const token = req.headers["authorization"]
@@ -15,6 +17,7 @@ const verifyToken = async (req, res, next) => {
                 .json({ message: "Nema tokena. Prijavi se ponovno." });
         }
         // Verify the token with the secret key
+        // @ts-expect-error TODO: We will come back to this later
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         // Set the user id to the request object
         req.userId = decoded.id;

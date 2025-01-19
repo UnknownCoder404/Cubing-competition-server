@@ -1,9 +1,9 @@
-const bcrypt = require("bcrypt");
+import { hash } from "bcrypt";
 const saltRounds = 10;
-const hashPassword = async (plainPassword) => {
+const hashPassword = async (plainPassword: string) => {
     try {
         console.time("Hashing password");
-        const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+        const hashedPassword = await hash(plainPassword, saltRounds);
         console.timeEnd("Hashing password");
         return hashedPassword;
     } catch (err) {
@@ -11,4 +11,4 @@ const hashPassword = async (plainPassword) => {
         throw new Error("Hashing failed");
     }
 };
-module.exports = hashPassword;
+export default hashPassword;

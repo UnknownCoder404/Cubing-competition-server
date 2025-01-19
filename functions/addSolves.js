@@ -1,4 +1,4 @@
-const User = require("../Models/user");
+import User from "../Models/user";
 /**
  * Function to update solver's solves in a given competition and round
  * @param {mongoose.Model} solver - Mongoose model for the user schema
@@ -71,4 +71,4 @@ async function updateSolves(
     }
 }
 
-module.exports = updateSolves;
+export default updateSolves;

@@ -1,4 +1,4 @@
-function formatTime(seconds) {
+function formatTime(seconds: number): string {
     // Convert seconds to milliseconds without rounding
     const ms = seconds * 1000;
 
@@ -22,4 +22,4 @@ function formatTime(seconds) {
     // Return the formatted time string
     return timeParts.join("");
 }
-module.exports = formatTime;
+export default formatTime;

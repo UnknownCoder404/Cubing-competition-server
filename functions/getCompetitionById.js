@@ -1,17 +1,15 @@
-const Competition = require("../Models/competition");
+import { findOne } from "../Models/competition";
 
 async function getCompetitionById(id, fields = null) {
     try {
         if (fields) {
-            return await Competition.findOne({ _id: { $eq: id } }).select(
-                fields,
-            );
+            return await findOne({ _id: { $eq: id } }).select(fields);
         } else {
-            return await Competition.findOne({ _id: { $eq: id } });
+            return await findOne({ _id: { $eq: id } });
         }
     } catch (error) {
         console.error(error);
         return null;
     }
 }
-module.exports = { getCompetitionById };
+export default { getCompetitionById };

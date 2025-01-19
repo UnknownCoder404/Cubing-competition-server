@@ -1,4 +1,14 @@
-function checkUsernameAndPassword(username, password, res) {
+import { Response } from "express"; // Or any other response type you are using
+
+interface ValidationErrorResponse {
+    message: string;
+}
+
+export function checkUsernameAndPassword(
+    username: string | undefined,
+    password: string | undefined,
+    res: Response<ValidationErrorResponse>,
+): Response<ValidationErrorResponse> | undefined {
     if (!username || !password) {
         return res
             .status(400)
@@ -9,9 +19,13 @@ function checkUsernameAndPassword(username, password, res) {
             .status(400)
             .json({ message: "Korisničko ime ili lozinka nije tekst." });
     }
+    return undefined; // Explicitly return undefined when no error
 }
 
-function checkUsernameLength(username, res) {
+export function checkUsernameLength(
+    username: string,
+    res: Response<ValidationErrorResponse>,
+): Response<ValidationErrorResponse> | undefined {
     if (username.length < 5) {
         return res
             .status(400)
@@ -22,9 +36,13 @@ function checkUsernameLength(username, res) {
             .status(400)
             .json({ message: "Korisničko ime mora biti manje od 20 znaka." });
     }
+    return undefined;
 }
 
-function checkPasswordLength(password, res) {
+export function checkPasswordLength(
+    password: string,
+    res: Response<ValidationErrorResponse>,
+): Response<ValidationErrorResponse> | undefined {
     if (password.length < 8) {
         return res
             .status(400)
@@ -35,34 +53,41 @@ function checkPasswordLength(password, res) {
             .status(400)
             .json({ message: "Lozinka mora biti manje od 15 znakova." });
     }
+    return undefined;
 }
 
-function checkUsernameAndPasswordEquality(username, password, res) {
+export function checkUsernameAndPasswordEquality(
+    username: string,
+    password: string,
+    res: Response<ValidationErrorResponse>,
+): Response<ValidationErrorResponse> | undefined {
     if (username === password) {
         return res
             .status(400)
             .json({ message: "Korisničko ime i lozinka ne smiju biti isti." });
     }
+    return undefined;
 }
 
-function checkGroup(group, res) {
+export function checkGroup(
+    group: number,
+    res: Response<ValidationErrorResponse>,
+): Response<ValidationErrorResponse> | undefined {
     if (group !== 1 && group !== 2) {
         return res.status(400).json({ message: "Grupa mora biti 1 ili 2." });
     }
+    return undefined;
 }
 
-function checkPasswordSpaces(password, res) {
-    if (password.split("").includes(" ")) {
+export function checkPasswordSpaces(
+    password: string,
+    res: Response<ValidationErrorResponse>,
+): Response<ValidationErrorResponse> | undefined {
+    if (password.includes(" ")) {
+        // Simplified space check
         return res
             .status(400)
             .json({ message: "Lozinka ne smije koristiti razmak." });
     }
+    return undefined;
 }
-module.exports = {
-    checkUsernameAndPassword,
-    checkUsernameLength,
-    checkPasswordLength,
-    checkUsernameAndPasswordEquality,
-    checkGroup,
-    checkPasswordSpaces,
-};
