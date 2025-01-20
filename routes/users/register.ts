@@ -1,18 +1,18 @@
-const express = require("express");
-const hashPassword = require("../../functions/hashPassword");
-const User = require("../../Models/user");
-const verifyToken = require("../../middleware/verifyToken");
-const isAdmin = require("../../utils/helpers/isAdmin");
-const {
+import { Router } from "express";
+import hashPassword from "../../functions/hashPassword";
+import User from "../../Models/user";
+import verifyToken from "../../middleware/verifyToken";
+import isAdmin from "../../utils/helpers/isAdmin";
+import {
     checkUsernameAndPassword,
     checkUsernameLength,
     checkPasswordLength,
     checkUsernameAndPasswordEquality,
     checkGroup,
     checkPasswordSpaces,
-} = require("../../functions/registerValidations");
-const registerLimiter = require("../../rateLimiter/register");
-const router = express.Router();
+} from "../../functions/registerValidations";
+import registerLimiter from "../../rateLimiter/register";
+const router = Router();
 // Define a route for user registration
 router.post("/", registerLimiter, verifyToken, isAdmin, async (req, res) => {
     try {
@@ -55,4 +55,4 @@ router.post("/", registerLimiter, verifyToken, isAdmin, async (req, res) => {
         }
     }
 });
-module.exports = router;
+export default router;

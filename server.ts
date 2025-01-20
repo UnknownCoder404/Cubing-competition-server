@@ -53,7 +53,7 @@ try {
 console.log("Connected to MongoDB");
 
 // Register and login
-app.use("/register", require("./routes/users/register"));
+app.use("/register", await import("./routes/users/register"));
 app.use("/login", require("./routes/users/login"));
 // Admin
 app.use("/admin/assign", require("./routes/admin/assign"));

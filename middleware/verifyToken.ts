@@ -4,7 +4,7 @@ import type { NextFunction, Request, Response } from "express";
 
 dotenv.config();
 // Define a middleware to verify the token
-const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
+async function verifyToken(req: Request, res: Response, next: NextFunction) {
     try {
         // Get the token from the request header or from parameters in the URL
         const token = req.headers["authorization"]
@@ -12,9 +12,10 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
             : new URLSearchParams(req.url.split("?")[1]).get("token");
         // Check if the token exists
         if (!token) {
-            return res
-                .status(403)
-                .json({ message: "Nema tokena. Prijavi se ponovno." });
+            res.status(403).json({
+                message: "Nema tokena. Prijavi se ponovno.",
+            });
+            return;
         }
         // Verify the token with the secret key
         // @ts-expect-error TODO: We will come back to this later
@@ -29,5 +30,5 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
             message: "Pogrešan token. Pokušajte se ponovno prijaviti.",
         });
     }
-};
-module.exports = verifyToken;
+}
+export default verifyToken;

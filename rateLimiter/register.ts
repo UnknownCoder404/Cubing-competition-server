@@ -1,6 +1,6 @@
-const rateLimit = require("express-rate-limit");
-const isRateLimitingEnabled = require("../config/isRateLimitingEnabled");
-const skip = require("../middleware/skip");
+import rateLimit from "express-rate-limit";
+import isRateLimitingEnabled from "../config/isRateLimitingEnabled";
+import skip from "../middleware/skip";
 // Specific rate limit for the login route
 const registerLimiter = isRateLimitingEnabled
     ? rateLimit({
@@ -10,4 +10,4 @@ const registerLimiter = isRateLimitingEnabled
               "Too many register attempts, please try again after 15 minutes",
       })
     : skip;
-module.exports = registerLimiter;
+export default registerLimiter;
