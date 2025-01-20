@@ -1,42 +1,59 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const allowedEvents = require("../../config/allowedEvents");
-const verifyToken = require("../../middleware/verifyToken");
-const { getUserById } = require("../../functions/getUserById");
-const { getCompetitionById } = require("../../functions/getCompetitionById");
-const isAdmin = require("../../utils/helpers/isAdmin");
+import express from "express";
+import mongoose from "mongoose";
+import allowedEvents, { AllowedEvent } from "../../config/allowedEvents";
+import verifyToken from "../../middleware/verifyToken";
+import { getUserById } from "../../functions/getUserById";
+import { getCompetitionById } from "../../functions/getCompetitionById";
+import isAdmin from "../../utils/helpers/isAdmin";
+import { IUserDocument } from "../../types/user";
+
 const router = express.Router();
+
+interface DeleteSolveResult {
+    status?: number;
+    success?: boolean;
+    message?: string;
+}
+
 router.delete("/:userId", verifyToken, isAdmin, async (req, res) => {
     try {
-        const userId = req.params.userId; // userid to delete solves
+        const userId = req.params.userId;
         const compToDelete = req.body.competitionId;
         const eventToDelete = req.body.event;
         const roundToDelete = req.body.round;
         const solveToDelete = req.body.solve;
-        checkTypes(
-            solveToDelete,
-            roundToDelete,
-            eventToDelete,
-            compToDelete,
-            res,
-        );
+
+        // Type-safe check
+        if (
+            typeof roundToDelete !== "number" ||
+            typeof solveToDelete !== "number" ||
+            !allowedEvents.includes(eventToDelete) ||
+            !mongoose.Types.ObjectId.isValid(compToDelete)
+        ) {
+            res.status(400).json({ message: "Invalid input types." }); // More generic error message here
+            return;
+        }
         const competition = await getCompetitionById(compToDelete);
         if (!competition) {
-            return res.status(400).json({
+            res.status(400).json({
                 message: `Natjecanje s tim ID-om nije pronađeno. ( Naveli ste: ${compToDelete} )`,
             });
+            return;
         }
         if (competition.isLocked) {
-            return res.status(403).json({
+            res.status(403).json({
                 message: "Natjecanje je zavrešeno i ne mogu se izbrisati.",
             });
+            return;
         }
         const user = await getUserById(userId);
         if (!user) {
-            return res.status(400).json({
+            res.status(400).json({
                 message: `Korisnik s tim ID-om nije pronađen. ( Naveli ste: ${userId} )`,
             });
+            return;
         }
+
         const result = await deleteSolve(
             user,
             compToDelete,
@@ -44,29 +61,39 @@ router.delete("/:userId", verifyToken, isAdmin, async (req, res) => {
             roundToDelete,
             solveToDelete,
         );
-        if (!result.success) {
-            throw new Error(result);
+
+        if (result && !result.success) {
+            // Check if result is defined and not successful
+            // Handle the unsuccessful case appropriately. Throwing an error here might not be the best approach,
+            // depending on how you want to handle error responses.
+            console.error("Error deleting solve:", result.message);
+            res.status(result.status || 500).json({
+                message: result.message || "Failed to delete solve.",
+            });
+            return;
         }
+
         await user.save();
-        return res.status(result.status ? result.status : 200).json({
-            message: result.message ? result.message : "Uspješno izbrisano.",
+        res.status(result?.status || 200).json({
+            message: result?.message || "Uspješno izbrisano.",
         });
-    } catch (err) {
+        return;
+    } catch (err: any) {
+        // Explicitly type err as any
         console.error(`Error deleting solve:\n ${err}`);
-        return res.status(err.status ? err.status : 500).json({
-            message: err.message
-                ? err.message
-                : "Neuspjelo brisanje. Greška u serveru.",
+        res.status(err?.status || 500).json({
+            message: err?.message || "Neuspjelo brisanje. Greška u serveru.",
         });
     }
 });
+
 async function deleteSolve(
-    user,
-    competitionId,
-    eventName,
-    roundNumber,
-    solveNumber,
-) {
+    user: IUserDocument,
+    competitionId: string,
+    eventName: AllowedEvent,
+    roundNumber: number,
+    solveNumber: number,
+): Promise<DeleteSolveResult> {
     try {
         if (!user.competitions) {
             user.competitions = [];
@@ -75,9 +102,6 @@ async function deleteSolve(
             return userComp.competitionId.equals(competitionId);
         });
         if (!comp) {
-            console.log(
-                `An attempt was made to delete a solve in a competition with ID ${competitionId} that was not found in user ${user._id}.`,
-            );
             return {
                 status: 400,
                 message: `Natjecanje s tim ID-om na tom korisniku nije pronađeno. ( Naveli ste: compId: ${competitionId}, userId: ${user._id} )`,
@@ -87,9 +111,6 @@ async function deleteSolve(
             return event.event === eventName;
         });
         if (!eventToDelete) {
-            console.log(
-                `An attempt was made to delete a solve in a competition with ID ${competitionId} and event ${eventName} that was not found in user ${user._id}. Competition and user were found while event was not.`,
-            );
             return {
                 status: 400,
                 message: `Event "${eventName}" nije pronađen u natjecanju s ID-om ${competitionId} u korisniku ${user._id}.`,
@@ -97,9 +118,6 @@ async function deleteSolve(
         }
         let roundToDelete = eventToDelete.rounds[roundNumber - 1];
         if (!roundToDelete) {
-            console.log(
-                `An attempt was made to delete a solve in a competition with ID ${competitionId} and event ${eventName} that was not found in user ${user._id}. Competition, user and event were found while round with number ${roundNumber} was not.`,
-            );
             return {
                 status: 400,
                 message: `Runda ${roundNumber} u natjecanju s ID-om "${competitionId}" u korisniku "${user._id}" u eventu "${eventName}" nije pronađena.`,
@@ -122,30 +140,5 @@ async function deleteSolve(
         };
     }
 }
-function checkTypes(
-    solveToDelete,
-    roundToDelete,
-    eventToDelete,
-    compToDelete,
-    res,
-) {
-    if (typeof roundToDelete !== "number") {
-        res.status(400).json({ message: "Runda za brisanje treba biti broj." });
-    }
-    if (typeof solveToDelete !== "number") {
-        res.status(400).json({
-            message: "Slaganje za brisanje treba biti broj.",
-        });
-    }
-    if (allowedEvents.indexOf(eventToDelete) === -1) {
-        res.status(400).json({
-            message: `Event natjecanja treba biti tekst. Naveli ste: ${eventToDelete}`,
-        });
-    }
-    if (!mongoose.Types.ObjectId.isValid(compToDelete)) {
-        return res.status(400).json({
-            message: `ID nije valjan. Naveli ste: ${compToDelete}.`,
-        });
-    }
-}
-module.exports = router;
+
+export default router;

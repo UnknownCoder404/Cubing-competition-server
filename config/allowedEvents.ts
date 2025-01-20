@@ -1,5 +1,5 @@
 // Allowed events for competitions
-export default [
+const allowedEvents = [
     "3x3",
     "3x3oh",
     "4x4",
@@ -8,3 +8,7 @@ export default [
     "megaminx",
     "teambld",
 ] as const;
+
+export type AllowedEvent = (typeof allowedEvents)[number];
+
+export default allowedEvents;

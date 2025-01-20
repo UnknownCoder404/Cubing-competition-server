@@ -12,6 +12,8 @@ import compressionFilter from "./config/compressionFilter";
 import generalLimiter from "./rateLimiter/general";
 import isRateLimitingEnabled from "./config/isRateLimitingEnabled";
 
+import * as routes from "./routes";
+
 console.log(`Running ${__filename}`);
 // Load the environment variables from the .env file
 dotenv.config();
@@ -51,43 +53,42 @@ try {
     process.exit(1);
 }
 console.log("Connected to MongoDB");
-
 // Register and login
-app.use("/register", await import("./routes/users/register"));
-app.use("/login", require("./routes/users/login"));
+app.use("/register", routes.register);
+app.use("/login", routes.login);
 // Admin
-app.use("/admin/assign", require("./routes/admin/assign"));
+app.use("/admin/assign", routes.assign);
 // Solves
-app.use("/solves/add", require("./routes/solves/add"));
-app.use("/solves/delete", require("./routes/solves/delete"));
-app.use("/solves/get", require("./routes/solves/get"));
+app.use("/solves/add", routes.addSolve);
+app.use("/solves/delete", routes.deleteSolve);
+app.use("/solves/get", routes.getSolve);
 // Users
-app.use("/users", require("./routes/users/all"));
-app.use("/users", require("./routes/users/get"));
-app.use("/users", require("./routes/users/delete"));
-app.use("/users", require("./routes/users/change-password"));
+app.use("/users", routes.getAllUsers);
+app.use("/users", routes.getUser);
+app.use("/users", routes.deleteUser);
+app.use("/users", routes.changePassword);
 // Posts
-app.use("/posts", require("./routes/posts/new"));
-app.use("/posts", require("./routes/posts/get"));
-app.use("/posts", require("./routes/posts/delete"));
-app.use("/posts", require("./routes/posts/edit"));
+app.use("/posts", routes.newPost);
+app.use("/posts", routes.getPost);
+app.use("/posts", routes.deletePost);
+app.use("/posts", routes.editPost);
 // Results in excel
-app.use("/results", require("./routes/excel/results"));
+app.use("/results", routes.results);
 // Winner
-app.use("/winner", require("./routes/winner/announce"));
-app.use("/winner", require("./routes/winner/get"));
+app.use("/winner", routes.announceWinner);
+app.use("/winner", routes.getWinner);
 // Token validation
-app.use("/token", require("./routes/token/validate"));
-app.use("/health-check", require("./routes/health_check/health_check"));
+app.use("/token", routes.validateToken);
+app.use("/health-check", routes.healthCheck);
 // Competitions
-app.use("/competitions", require("./routes/competitions/create"));
-app.use("/competitions", require("./routes/competitions/get"));
-app.use("/competitions", require("./routes/competitions/delete"));
-app.use("/competitions", require("./routes/competitions/edit"));
-app.use("/competitions", require("./routes/competitions/lock"));
-app.use("/competitions", require("./routes/competitions/results"));
+app.use("/competitions", routes.createCompetition);
+app.use("/competitions", routes.getCompetition);
+app.use("/competitions", routes.deleteCompetition);
+app.use("/competitions", routes.editCompetition);
+app.use("/competitions", routes.lockCompetition);
+app.use("/competitions", routes.competitionResults);
 // Backup
-app.use("/backup", require("./routes/backup/get"));
+app.use("/backup", routes.backup);
 
 // Start the server on the specified port
 const PORT = process.env.PORT || 3000;

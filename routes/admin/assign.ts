@@ -1,7 +1,7 @@
-const express = require("express");
-const User = require("../../Models/user");
-const verifyToken = require("../../middleware/verifyToken");
-const isAdmin = require("../../utils/helpers/isAdmin");
+import express from "express";
+import User from "../../Models/user";
+import verifyToken from "../../middleware/verifyToken";
+import isAdmin from "../../utils/helpers/isAdmin";
 const router = express.Router();
 router.post("/:userId", verifyToken, isAdmin, async (req, res) => {
     try {
@@ -19,17 +19,17 @@ router.post("/:userId", verifyToken, isAdmin, async (req, res) => {
                 adminsCount += user.role === "admin" ? 1 : 0;
             });
             if (adminsCount <= 1) {
-                return res
-                    .status(400)
-                    .json({
-                        message: "Uvijek mora postojati barem 1 administrator.",
-                    });
+                res.status(400).json({
+                    message: "Uvijek mora postojati barem 1 administrator.",
+                });
+                return;
             }
             user.role = "user";
             await user.save();
-            return res.status(200).json({
+            res.status(200).json({
                 message: `Uloga administratora ${user.username} uspješno je odbačena.`,
             });
+            return;
         }
         user.role = "admin";
         await user.save();
@@ -41,4 +41,4 @@ router.post("/:userId", verifyToken, isAdmin, async (req, res) => {
         res.status(500).json({ message: "Greška pri serveru." });
     }
 });
-module.exports = router;
+export default router;

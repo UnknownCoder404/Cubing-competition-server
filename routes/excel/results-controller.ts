@@ -1,15 +1,9 @@
-const { Workbook } = require("exceljs");
-const User = require("../../Models/user");
-const Competition = require("../../Models/competition");
-const formatTime = require("../../functions/formatTime");
+import { Workbook } from "exceljs";
+import User from "../../Models/user";
+import Competition from "../../Models/competition";
+import formatTime from "../../functions/formatTime";
 
-/**
- * Generate an Excel workbook with competition results
- * @param {User[]} users - All users in the database
- * @param {Competition} competition - Competition to generate results for
- * @returns {Workbook} Excel workbook with competition results
- */
-async function getResultsInExcel(users, competition) {
+async function getResultsInExcel(users: any, competition: any) {
     const workbook = new Workbook();
     const compId = competition._id;
 
@@ -31,14 +25,6 @@ async function getResultsInExcel(users, competition) {
     }
 }
 
-/**
- * Create a worksheet for a specific event
- * @param {Workbook} workbook - Excel workbook to add worksheet to
- * @param {Object} event - Event details
- * @param {User[]} users - All users
- * @param {ObjectId} compId - Competition ID
- * @returns {Worksheet} Created and populated worksheet
- */
 function createWorksheetForEvent(workbook, event, users, compId) {
     // Create worksheet columns
     const rounds = Array.from({ length: event.rounds }, (_, i) => ({
@@ -66,13 +52,6 @@ function createWorksheetForEvent(workbook, event, users, compId) {
     return autoSizeColumnsInASheet(worksheet);
 }
 
-/**
- * Find user's data for a specific competition and event
- * @param {User} user - User to find data for
- * @param {ObjectId} compId - Competition ID
- * @param {string} eventName - Event name
- * @returns {Object|null} User's event data or null
- */
 function getUserEventData(user, compId, eventName) {
     const comp = user.competitions.find((comp) =>
         comp.competitionId.equals(compId),
@@ -82,13 +61,6 @@ function getUserEventData(user, compId, eventName) {
     return comp.events.find((event) => event.event === eventName);
 }
 
-/**
- * Filter users participating in a specific event
- * @param {User[]} users - All users
- * @param {ObjectId} compId - Competition ID
- * @param {string} eventName - Event name
- * @returns {User[]} Filtered users for the event
- */
 function filterUsersForEvent(users, compId, eventName) {
     const filteredUsers = users.filter((user) => {
         const comp = user.competitions.find((comp) =>
@@ -101,12 +73,6 @@ function filterUsersForEvent(users, compId, eventName) {
     return filteredUsers;
 }
 
-/**
- * Create a row of data for a user in an event
- * @param {User} user - User to create row for
- * @param {Object} userEventData - User's event data
- * @returns {Object} Row data for the worksheet
- */
 function createRowForUser(user, userEventData) {
     const row = { name: user.username };
 
@@ -123,11 +89,6 @@ function createRowForUser(user, userEventData) {
     return row;
 }
 
-/**
- * Automatically resize columns in a worksheet based on content
- * @param {Worksheet} worksheet - Worksheet to auto-size
- * @returns {Worksheet} Worksheet with auto-sized columns
- */
 function autoSizeColumnsInASheet(worksheet) {
     worksheet.columns.forEach((column) => {
         let maxLength = 10;
@@ -140,4 +101,4 @@ function autoSizeColumnsInASheet(worksheet) {
     return worksheet;
 }
 
-module.exports = getResultsInExcel;
+export default getResultsInExcel;

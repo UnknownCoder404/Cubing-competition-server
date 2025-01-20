@@ -1,18 +1,23 @@
 import User from "../Models/user";
+import { Types } from "mongoose";
+import { AllowedEvent, IUserDocument } from "../types/user";
+import { ICompetitionDocument } from "../types/competition";
+
 /**
  * Function to update solver's solves in a given competition and round
- * @param {mongoose.Model} solver - Mongoose model for the user schema
- * @param {Object} events - Object with event (String) and solves (array)
- * @param {Number} round - The round number to add solves to
- * @param {mongoose.Model} competition - Mongoose model for the competition schema
+ * @param {IUserDocument} solver - Mongoose document for the user schema
+ * @param {{ event: AllowedEvent, rounds: number[] }} events - Object with event (String) and solves (array)
+ * @param {number} round - The round number to add solves to
+ * @param {IUserCompetition} competition - Mongoose document for the competition schema
+ * @param {boolean} [replace=false] - Whether to replace existing solves in the round
  */
 async function updateSolves(
-    solver,
-    events,
-    round,
-    competition,
-    replace = false,
-) {
+    solver: IUserDocument,
+    events: { event: AllowedEvent; rounds: number[] },
+    round: number,
+    competition: ICompetitionDocument,
+    replace: boolean = false,
+): Promise<1 | -1> {
     try {
         // Find the user who is the solver
         const user = await User.findById(solver._id);
@@ -26,11 +31,15 @@ async function updateSolves(
         if (!userCompetition) {
             user.competitions.push({
                 competitionId: competition._id,
-                solves: [],
-            });
+                events: [], // Initialize events array
+            } as any); // Type assertion needed as the push might expect the full IUserCompetition
             userCompetition = user.competitions.find((comp) =>
                 comp.competitionId.equals(competition._id),
             );
+        }
+
+        if (!userCompetition) {
+            throw new Error("Could not find or create user competition.");
         }
 
         // Find the event in the user's competition data
@@ -44,7 +53,12 @@ async function updateSolves(
                 (event) => event.event === events.event,
             );
         }
-        // If you add solves to round 2 and there are no solves in round 1, round 1 is null and it needs to be replaced
+
+        if (!userEvent) {
+            throw new Error("Could not find or create user event.");
+        }
+
+        // If you add solves to round 2 and there are no solves in round 1, round 1 is undefined and it needs to be replaced
         if (!userEvent.rounds[round - 1]) {
             replace = true;
         }
@@ -52,6 +66,9 @@ async function updateSolves(
         if (replace) {
             userEvent.rounds[round - 1] = events.rounds;
         } else {
+            if (!userEvent.rounds[round - 1]) {
+                userEvent.rounds[round - 1] = []; // Initialize the array if it's undefined
+            }
             userEvent.rounds[round - 1].push(...events.rounds);
         }
         if (userEvent.rounds[round - 1].length > 5) {

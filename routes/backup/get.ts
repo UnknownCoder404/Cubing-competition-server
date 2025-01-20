@@ -1,24 +1,27 @@
 // Route for getting backup
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
+import express from "express";
+import fs from "fs";
+import path from "path";
 const router = express.Router();
-const verifyToken = require("../../middleware/verifyToken");
-const isAdmin = require("../../utils/helpers/isAdmin");
-const archiver = require("archiver");
+import verifyToken from "../../middleware/verifyToken";
+import isAdmin from "../../utils/helpers/isAdmin";
+import archiver from "archiver";
+
 const backupsPath = path.join(__dirname, "../../backups");
 const backupPath = path.join(__dirname, "../../backups.zip");
 zipFolder(backupsPath, backupPath);
 
 router.get("/", verifyToken, isAdmin, async (req, res) => {
     try {
-        return res.status(200).sendFile(backupPath);
+        res.status(200).sendFile(backupPath);
+        return;
     } catch (error) {
-        return res.status(500).json({ message: "Error while getting backup" });
+        res.status(500).json({ message: "Error while getting backup" });
+        return;
     }
 });
 
-function zipFolder(sourceFolder, outPath) {
+function zipFolder(sourceFolder: string, outPath: string) {
     console.time("zipping backups");
     const output = fs.createWriteStream(outPath);
     const archive = archiver("zip", {
@@ -41,4 +44,5 @@ function zipFolder(sourceFolder, outPath) {
     archive.finalize();
     console.timeEnd("zipping backups");
 }
-module.exports = router;
+
+export default router;
