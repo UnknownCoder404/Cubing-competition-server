@@ -1,5 +1,5 @@
-const express = require("express");
-const User = require("../../Models/user");
+import express from "express";
+import User from "../../Models/user";
 const router = express.Router();
 router.get("/", async (req, res) => {
     try {
@@ -14,4 +14,5 @@ router.get("/", async (req, res) => {
         res.status(500).json({ message: "Greška u serveru." });
     }
 });
-module.exports = router;
+
+export default router;

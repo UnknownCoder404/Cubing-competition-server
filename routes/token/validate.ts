@@ -1,5 +1,5 @@
-const express = require("express");
-const verifyToken = require("../../middleware/verifyToken");
+import express from "express";
+import verifyToken from "../../middleware/verifyToken";
 const router = express.Router();
 router.get("/", verifyToken, (req, res) => {
     try {
@@ -10,4 +10,5 @@ router.get("/", verifyToken, (req, res) => {
         res.status(500);
     }
 });
-module.exports = router;
+
+export default router;

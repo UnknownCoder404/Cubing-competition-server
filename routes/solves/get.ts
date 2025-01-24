@@ -1,5 +1,5 @@
-const express = require("express");
-const User = require("../../Models/user");
+import express from "express";
+import User from "../../Models/user";
 const router = express.Router();
 // Route handler for getting live solves
 router.get("/", async (req, res) => {
@@ -14,15 +14,17 @@ router.get("/", async (req, res) => {
         users.filter((user) => {
             return user.competitions.length > 0;
         });
-        return res.status(200).json({
+        res.status(200).json({
             lastUpdated,
             users,
         });
+        return;
     } catch (error) {
         console.error(error);
-        return res.status(500).json({
+        res.status(500).json({
             message: "Greška prilikom dohvaćanja slaganja.",
         });
+        return;
     }
 });
-module.exports = router;
+export default router;

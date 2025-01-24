@@ -1,9 +1,10 @@
-const express = require("express");
-const User = require("../../Models/user");
-const { getCompetitionById } = require("../../functions/getCompetitionById");
-const getResultsInExcel = require("../../routes/excel/results-controller");
-const verifyToken = require("../../middleware/verifyToken");
-const isAdmin = require("../../utils/helpers/isAdmin");
+import express from "express";
+import User from "../../Models/user";
+import { getCompetitionById } from "../../functions/getCompetitionById";
+import getResultsInExcel from "../../routes/excel/results-controller";
+import verifyToken from "../../middleware/verifyToken";
+import isAdmin from "../../utils/helpers/isAdmin";
+
 const router = express.Router();
 router.get("/", verifyToken, isAdmin, async (req, res) => {
     try {
@@ -17,6 +18,10 @@ router.get("/", verifyToken, isAdmin, async (req, res) => {
         }
         const users = await User.find();
         const competition = await getCompetitionById(competitionId);
+        if (!competition) {
+            res.status(404).json({ message: "Competition not found." });
+            return;
+        }
         const fileName = competition.name + ".xlsx";
         const workbook = await getResultsInExcel(users, competition);
         // Set the headers to prompt download on the client side
@@ -40,4 +45,5 @@ router.get("/", verifyToken, isAdmin, async (req, res) => {
         res.status(500).send("Server Error");
     }
 });
-module.exports = router;
+
+export default router;

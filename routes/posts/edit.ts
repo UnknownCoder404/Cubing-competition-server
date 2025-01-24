@@ -1,13 +1,17 @@
-const express = require("express");
-const Post = require("../../Models/post");
+import express from "express";
+import Post from "../../Models/post";
 const router = express.Router();
-const isAdmin = require("../../utils/helpers/isAdmin");
-const findUser = require("../../utils/helpers/findUser");
-const verifyToken = require("../../middleware/verifyToken");
+import isAdmin from "../../utils/helpers/isAdmin";
+import findUser from "../../utils/helpers/findUser";
+import verifyToken from "../../middleware/verifyToken";
+
 router.put("/edit/:id", verifyToken, isAdmin, findUser, async (req, res) => {
     try {
         const { id } = req.params;
-        if (!id) return res.status(400).json({ message: "Id nije naveden." });
+        if (!id) {
+            res.status(400).json({ message: "Id nije naveden." });
+            return;
+        }
         const { title, description } = req.body;
         if (
             !title ||
@@ -15,7 +19,8 @@ router.put("/edit/:id", verifyToken, isAdmin, findUser, async (req, res) => {
             typeof title !== "string" ||
             typeof description !== "string"
         ) {
-            return res.status(400).json({ message: "Neispravan format." });
+            res.status(400).json({ message: "Neispravan format." });
+            return;
         }
         const post = await Post.findByIdAndUpdate(
             id,
@@ -33,12 +38,14 @@ router.put("/edit/:id", verifyToken, isAdmin, findUser, async (req, res) => {
             },
         );
         if (!post) {
-            return res.status(404).json({ message: "Objava nije pronađena." });
+            res.status(404).json({ message: "Objava nije pronađena." });
+            return;
         }
-        return res.status(200).json({ message: "Objava je ažurirana.", post });
+        res.status(200).json({ message: "Objava je ažurirana.", post });
+        return;
     } catch (error) {
         console.error(`Error in editing post:\n ${error}`);
         res.status(500).json({ message: "Greška u serveru." });
     }
 });
-module.exports = router;
+export default router;

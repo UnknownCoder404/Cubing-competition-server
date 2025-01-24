@@ -1,11 +1,13 @@
-const express = require("express");
-const Post = require("../../Models/post");
-const verifyToken = require("../../middleware/verifyToken");
-const isAdmin = require("../../utils/helpers/isAdmin");
-const findUser = require("../../utils/helpers/findUser");
+import express from "express";
+import Post from "../../Models/post";
+import verifyToken from "../../middleware/verifyToken";
+import isAdmin from "../../utils/helpers/isAdmin";
+import findUser from "../../utils/helpers/findUser";
+import type { IUserDocument } from "../../types/user";
+
 const router = express.Router();
 router.post("/new", verifyToken, isAdmin, findUser, async (req, res) => {
-    const user = req.user;
+    const user = req.user as IUserDocument;
     const userId = req.userId;
     const username = user.username;
     const { title, description } = req.body;
@@ -25,4 +27,4 @@ router.post("/new", verifyToken, isAdmin, findUser, async (req, res) => {
         res.status(500).json({ message: "Neuspješno objavljivanje posta." });
     }
 });
-module.exports = router;
+export default router;

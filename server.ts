@@ -74,9 +74,6 @@ app.use("/posts", routes.deletePost);
 app.use("/posts", routes.editPost);
 // Results in excel
 app.use("/results", routes.results);
-// Winner
-app.use("/winner", routes.announceWinner);
-app.use("/winner", routes.getWinner);
 // Token validation
 app.use("/token", routes.validateToken);
 app.use("/health-check", routes.healthCheck);

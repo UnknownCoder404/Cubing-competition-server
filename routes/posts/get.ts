@@ -1,10 +1,12 @@
-const express = require("express");
-const Post = require("../../Models/post");
+import express from "express";
+import Post from "../../Models/post";
 const router = express.Router();
-const { getUsernameById } = require("../../functions/getUsernameById");
-router.get("/", async (req, res) => {
+import { getUsernameById } from "../../functions/getUsernameById";
+import { IPostDocument } from "../../types/post";
+
+router.get("/", async (_req, res) => {
     try {
-        const posts = await Post.find();
+        const posts: IPostDocument[] = await Post.find();
         // Construct response object with usernames
         const response = await Promise.all(
             posts.map(async (post) => ({
@@ -24,4 +26,4 @@ router.get("/", async (req, res) => {
         res.status(500).json({ message: "Neuspješno dohvaćanje objava." });
     }
 });
-module.exports = router;
+export default router;
