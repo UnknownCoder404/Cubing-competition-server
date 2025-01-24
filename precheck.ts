@@ -1,8 +1,3 @@
-/*
-File for checking if everything is configured correctly
-*/
-// precheck.js
-
 import mongoose from "mongoose";
 import { config } from "dotenv";
 
@@ -11,24 +6,23 @@ config();
 console.log(`Running ${import.meta.url}`);
 
 // List of required environment variables
-const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"];
+const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"] as const;
 
 // List of optional environment variables
-const optionalEnvVars = ["PORT"];
+const optionalEnvVars = ["PORT"] as const;
 
-// Function to check if all required env vars are defined
-const checkEnvVars = () => {
-    let allVarsDefined = true;
-    requiredEnvVars.forEach((varName) => {
-        if (!process.env[varName]) {
+const checkEnvVars = (): boolean => {
+    let allVarsDefined: boolean = true;
+    requiredEnvVars.forEach((varName: string) => {
+        if (!(process.env as NodeJS.ProcessEnv)[varName]) {
             console.warn(
                 `Warning: Environment variable ${varName} is not defined.`,
             );
             allVarsDefined = false;
         }
     });
-    optionalEnvVars.forEach((varName) => {
-        if (!process.env[varName]) {
+    optionalEnvVars.forEach((varName: string) => {
+        if (!(process.env as NodeJS.ProcessEnv)[varName]) {
             console.log(
                 `Environment variable ${varName} is undefined, but is optional so continuing.`,
             );
@@ -37,19 +31,19 @@ const checkEnvVars = () => {
     return allVarsDefined;
 };
 
-// Function to check if the database connection is available
-const checkDbConnection = async () => {
+const checkDbConnection = async (): Promise<void> => {
     try {
-        await mongoose.connect(process.env.MONGO_URI);
+        console.log("Connecting to database...");
+        await mongoose.connect(process.env.MONGO_URI!);
         console.log("Database connection successful.");
-    } catch (error) {
+    } catch (error: any) {
+        // Using 'any' for error type for simplicity, could be more specific
         console.error("Database connection failed:", error.message);
         process.exit(1); // Exit the process with failure
     }
 };
 
-// Main function to perform prechecks
-const precheck = async () => {
+const precheck = async (): Promise<void> => {
     console.time("Precheck");
     if (!checkEnvVars()) {
         console.warn(
@@ -63,5 +57,4 @@ const precheck = async () => {
     process.exit(0); // Exit the process with success
 };
 
-// Execute precheck
 precheck();

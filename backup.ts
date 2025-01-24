@@ -9,7 +9,7 @@ config();
 async function connectToDatabase() {
     console.time("Connect to mongodb");
     try {
-        await mongoose.connect(process.env.MONGO_URI);
+        await mongoose.connect(process.env.MONGO_URI!);
         console.timeEnd("Connect to mongodb");
         console.log("Connected to mongodb");
     } catch (error) {
@@ -55,5 +55,5 @@ async function main() {
     exit();
 }
 
-console.log(`Running ${import.meta.file}`);
+console.log(`Running ${import.meta.url}`);
 main();
