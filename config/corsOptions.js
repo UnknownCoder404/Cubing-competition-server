@@ -16,7 +16,7 @@ function matchesPrLink(url) {
 
         // Ensure prefix starts with "cubing-competition-nextjs-git"
         const prefix = subdomainParts.slice(0, 4).join("-");
-        if (prefix !== "cubing-competition-nextjs-git") return false;
+        if (prefix !== "cro-cube-comp-git") return false;
 
         // Validate alphanumeric parts in the subdomain
         const identifier = subdomainParts[4];
@@ -34,7 +34,7 @@ const allowedOrigins = [
     "http://localhost:2500",
     "http://127.0.0.1:2500",
     "https://cro-cube-comp.github.io",
-    "https://cubing-competition-nextjs.vercel.app",
+    "https://cro-cube-comp.vercel.app",
 ];
 
 // CORS middleware function to check the origin against the allowed list
