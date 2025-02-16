@@ -17,13 +17,24 @@ const router = express.Router();
 router.post("/", registerLimiter, verifyToken, isAdmin, async (req, res) => {
     try {
         const { username, password, group } = req.body;
-        // Call validation functions
+        // Call validation functions and check if response was sent
         checkUsernameAndPassword(username, password, res);
+        if (res.headersSent) return;
+
         checkUsernameLength(username, res);
+        if (res.headersSent) return;
+
         checkPasswordLength(password, res);
+        if (res.headersSent) return;
+
         checkUsernameAndPasswordEquality(username, password, res);
+        if (res.headersSent) return;
+
         checkGroup(group, res);
+        if (res.headersSent) return;
+
         checkPasswordSpaces(password, res);
+        if (res.headersSent) return;
 
         // If all validations pass, proceed with user registration
         const user = new User({
