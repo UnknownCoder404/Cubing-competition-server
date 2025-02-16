@@ -5,10 +5,8 @@ import express from "express";
 const router = express.Router();
 import User from "../../Models/user";
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import loginLimiter from "../../rateLimiter/login";
 import getEnv from "../../utils/getEnv";
-dotenv.config();
 
 router.post("/", loginLimiter, async (req: Request, res: Response) => {
     try {
@@ -40,7 +38,7 @@ router.post("/", loginLimiter, async (req: Request, res: Response) => {
         } as const;
         // Generate a JSON web token with the user id as the payload
         const token = jwt.sign(tokenPayload, getEnv().JWT_SECRET, {
-            expiresIn: process.env.TOKEN_EXPIRATION || "1d",
+            expiresIn: getEnv().TOKEN_EXPIRATION || "1d",
         });
 
         res.status(200).json({
