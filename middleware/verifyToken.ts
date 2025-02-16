@@ -1,8 +1,8 @@
 import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
 import type { NextFunction, Request, Response } from "express";
+import getEnv from "../utils/getEnv";
+import { TokenPayload } from "../types/token";
 
-dotenv.config();
 // Define a middleware to verify the token
 async function verifyToken(req: Request, res: Response, next: NextFunction) {
     try {
@@ -18,8 +18,7 @@ async function verifyToken(req: Request, res: Response, next: NextFunction) {
             return;
         }
         // Verify the token with the secret key
-        // @ts-expect-error TODO: We will come back to this later
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token, getEnv().JWT_SECRET) as TokenPayload;
         // Set the user id to the request object
         req.userId = decoded.id;
         req.userRole = decoded.role;

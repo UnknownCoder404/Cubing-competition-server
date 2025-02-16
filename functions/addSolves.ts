@@ -1,6 +1,7 @@
 import User from "../Models/user";
 import { Types } from "mongoose";
-import { AllowedEvent, IUserDocument } from "../types/user";
+import { AllowedEvent } from "../config/allowedEvents";
+import { IUserDocument } from "../types/user";
 import { ICompetitionDocument } from "../types/competition";
 
 /**

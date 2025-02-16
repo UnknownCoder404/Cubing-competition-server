@@ -3,13 +3,14 @@ import mongoose from "mongoose";
 import { writeFile, mkdir } from "fs/promises";
 import { exit } from "process";
 import { join } from "path";
+import getEnv from "./utils/getEnv";
 
 config();
 
 async function connectToDatabase() {
     console.time("Connect to mongodb");
     try {
-        await mongoose.connect(process.env.MONGO_URI!);
+        await mongoose.connect(getEnv().MONGO_URI);
         console.timeEnd("Connect to mongodb");
         console.log("Connected to mongodb");
     } catch (error) {

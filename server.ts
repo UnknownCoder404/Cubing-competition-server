@@ -13,6 +13,7 @@ import generalLimiter from "./rateLimiter/general";
 import isRateLimitingEnabled from "./config/isRateLimitingEnabled";
 
 import * as routes from "./routes";
+import getEnv from "./utils/getEnv";
 
 console.log(`Running ${__filename}`);
 // Load the environment variables from the .env file
@@ -45,8 +46,7 @@ app.use(compression(compressionOptions));
 console.log("Trying to connect to mongoDB...");
 try {
     console.time("Connect to MongoDB");
-    // @ts-expect-error TODO: We will come back to this later
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(getEnv().MONGO_URI);
     console.timeEnd("Connect to MongoDB");
 } catch (error) {
     console.error("Failed to connect to MongoDB: \n" + error);
@@ -88,6 +88,6 @@ app.use("/competitions", routes.competitionResults);
 app.use("/backup", routes.backup);
 
 // Start the server on the specified port
-const PORT = process.env.PORT || 3000;
+const PORT = getEnv().PORT || 3000;
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
