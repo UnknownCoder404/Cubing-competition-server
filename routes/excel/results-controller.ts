@@ -1,21 +1,22 @@
 import { Workbook } from "exceljs";
-import User from "../../Models/user";
-import Competition from "../../Models/competition";
 import formatTime from "../../functions/formatTime";
+import { IUserDocument } from "../../types/user";
+import {
+    ICompetitionDocument,
+    ICompetitionEvent,
+} from "../../types/competition";
 
-async function getResultsInExcel(users: any, competition: any) {
+async function getResultsInExcel(
+    users: IUserDocument[],
+    competition: ICompetitionDocument,
+): Promise<Workbook> {
     const workbook = new Workbook();
     const compId = competition._id;
 
     try {
         // Process each event in the competition
         competition.events.forEach((event) => {
-            const worksheet = createWorksheetForEvent(
-                workbook,
-                event,
-                users,
-                compId,
-            );
+            createWorksheetForEvent(workbook, event, users, compId);
         });
 
         return workbook;
@@ -25,7 +26,12 @@ async function getResultsInExcel(users: any, competition: any) {
     }
 }
 
-function createWorksheetForEvent(workbook, event, users, compId) {
+function createWorksheetForEvent(
+    workbook: Workbook,
+    event: ICompetitionEvent,
+    users: IUserDocument[],
+    compId: string,
+) {
     // Create worksheet columns
     const rounds = Array.from({ length: event.rounds }, (_, i) => ({
         header: `Runda ${i + 1}`,
@@ -52,7 +58,11 @@ function createWorksheetForEvent(workbook, event, users, compId) {
     return autoSizeColumnsInASheet(worksheet);
 }
 
-function getUserEventData(user, compId, eventName) {
+function getUserEventData(
+    user: IUserDocument,
+    compId: string,
+    eventName: string,
+) {
     const comp = user.competitions.find((comp) =>
         comp.competitionId.equals(compId),
     );
@@ -61,7 +71,11 @@ function getUserEventData(user, compId, eventName) {
     return comp.events.find((event) => event.event === eventName);
 }
 
-function filterUsersForEvent(users, compId, eventName) {
+function filterUsersForEvent(
+    users: IUserDocument[],
+    compId: string,
+    eventName: string,
+): IUserDocument[] {
     const filteredUsers = users.filter((user) => {
         const comp = user.competitions.find((comp) =>
             comp.competitionId.equals(compId),
@@ -73,8 +87,11 @@ function filterUsersForEvent(users, compId, eventName) {
     return filteredUsers;
 }
 
-function createRowForUser(user, userEventData) {
-    const row = { name: user.username };
+function createRowForUser(
+    user: IUserDocument,
+    userEventData: { rounds: number[][] },
+) {
+    const row: Record<string, string> = { name: user.username };
 
     userEventData.rounds.forEach((round, index) => {
         if (!round || round.length === 0) return;
@@ -89,10 +106,10 @@ function createRowForUser(user, userEventData) {
     return row;
 }
 
-function autoSizeColumnsInASheet(worksheet) {
-    worksheet.columns.forEach((column) => {
+function autoSizeColumnsInASheet(worksheet: any) {
+    worksheet.columns.forEach((column: any) => {
         let maxLength = 10;
-        column.eachCell({ includeEmpty: true }, (cell) => {
+        column.eachCell({ includeEmpty: true }, (cell: any) => {
             const cellLength = cell.value ? cell.value.toString().length : 10;
             maxLength = Math.max(maxLength, cellLength);
         });

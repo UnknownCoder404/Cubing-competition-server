@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { AllowedEvent } from "./event";
+import { type AllowedEvent } from "../config/allowedEvents";
 
 export interface IUserCompetitionEvent {
     event: AllowedEvent;

@@ -26,7 +26,7 @@ router.post("/", registerLimiter, verifyToken, isAdmin, async (req, res) => {
             () => checkUsernameAndPasswordEquality(username, password, res),
             () => checkGroup(group, res),
             () => checkPasswordSpaces(password, res),
-        ];
+        ] as const;
 
         // Execute validations and check for early returns
         for (const validate of validations) {
@@ -52,16 +52,23 @@ router.post("/", registerLimiter, verifyToken, isAdmin, async (req, res) => {
             },
         });
     } catch (err) {
-        if (err.code === 11000) {
-            // 11000 duplicate error (mongoose)
-            res.status(409).json({ message: "Korisničko ime već postoji." });
-        } else {
-            // Log the error for internal debugging, but don't expose details to the client
-            console.error(`Failed to register user:\n ${err}`);
+        if (err instanceof Error) {
+            if ("code" in err && (err as any).code === 11000) {
+                res.status(409).json({
+                    message: "Korisničko ime već postoji.",
+                });
+                return;
+            }
+            console.error(`Failed to register user:\n ${err.message}`);
             res.status(500).json({
                 message: "Došlo je do pogreške kod servera.",
             });
+            return;
         }
+        console.error("Nepoznata greška prilikom registracije:", err);
+        res.status(500).json({
+            message: "Došlo je do neočekivane pogreške.",
+        });
     }
 });
 export default router;

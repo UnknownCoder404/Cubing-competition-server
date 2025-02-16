@@ -1,11 +1,12 @@
 {
     "name": "cube-competition",
     "version": "3.4.1",
-    "main": "server.js",
+    "main": "server.ts",
     "scripts": {
-        "start": "bun run precheck.ts && bun run backup.ts && bun run server.ts ",
+        "start": "bun run precheck.ts && bun run backup.ts && bun run server.ts",
         "format:write": "prettier . --write --cache",
-        "format:check": "prettier . --check --cache"
+        "format:check": "prettier . --check --cache",
+        "typecheck": "tsc --noEmit"
     },
     "keywords": [],
     "author": "",
@@ -28,6 +29,7 @@
         "@types/bcrypt": "^5.0.2",
         "@types/compression": "^1.7.5",
         "@types/cors": "^2.8.17",
-        "@types/jsonwebtoken": "^9.0.7"
+        "@types/jsonwebtoken": "^9.0.7",
+        "typescript": "^5.0.0"
     }
 }
