@@ -11,7 +11,7 @@ export default function getEnv() {
         MONGO_URI: env.MONGO_URI,
         JWT_SECRET: env.JWT_SECRET,
         ...env,
-    } as Record<string, string | undefined> & {
+    } as Record<string | undefined, string | undefined> & {
         MONGO_URI: string;
         JWT_SECRET: string;
     };
