@@ -34,6 +34,7 @@ if (isRateLimitingEnabled) {
 if (isCorsEnabled) {
     app.use(cors(corsOptions));
 } else {
+    app.use(cors());
     console.warn(
         "CORS is disabled. It's recommended to enable it. Use only for development purposes.",
     );
