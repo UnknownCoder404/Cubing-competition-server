@@ -3,7 +3,6 @@ import type { NextFunction, Request, Response } from "express";
 // Updated session-based authentication middleware
 function authenticateSession(req: Request, res: Response, next: NextFunction) {
     try {
-        console.log(req.session.user);
         // Check if user exists in session
         if (!req.session.user) {
             return res.status(401).json({
@@ -15,8 +14,7 @@ function authenticateSession(req: Request, res: Response, next: NextFunction) {
         // Consider deprecating these in favor of direct session access
         req.userId = req.session.user.id;
         req.userRole = req.session.user.role;
-        console.log("User ID:", req.userId);
-        console.log("User Role:", req.userRole);
+
         // Optional: Add user object to request
         req.user = {
             id: req.session.user.id,

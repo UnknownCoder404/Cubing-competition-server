@@ -26,7 +26,7 @@ app.use(cookieParser()); // Cookie parsing middleware
 // Session configuration
 app.use(
     session({
-        secret: getEnv().SESSION_SECRET || "fallback_secret",
+        secret: getEnv().SESSION_SECRET,
         resave: false,
         saveUninitialized: false,
         cookie: {
@@ -102,8 +102,7 @@ app.use("/competitions", routes.lockCompetition);
 app.use("/competitions", routes.competitionResults);
 app.use("/backup", routes.backup);
 
-// Removed token validation route as it's not needed with sessions
-// app.use("/token", routes.validateToken);
+app.use("/session", routes.validateSession);
 
 // Server startup
 const PORT = getEnv().PORT || 3000;
