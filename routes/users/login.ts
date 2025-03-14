@@ -1,12 +1,9 @@
 import type { Request, Response } from "express";
-import { TokenPayload } from "../../types/token";
-
 import express from "express";
-const router = express.Router();
 import User from "../../Models/user";
-import jwt from "jsonwebtoken";
 import loginLimiter from "../../rateLimiter/login";
-import getEnv from "../../utils/getEnv";
+
+const router = express.Router();
 
 router.post("/", loginLimiter, async (req: Request, res: Response) => {
     try {
@@ -23,30 +20,42 @@ router.post("/", loginLimiter, async (req: Request, res: Response) => {
         // Find the user by username
         const user = await User.findOne({ username: { $eq: username } }).select(
             "+password",
-        ); // Select the password field only
+        );
 
-        // Check if the user exists and the password matches
+        // Check credentials
         if (!user || !(await user.comparePassword(password))) {
             res.status(401).json({
                 message: "Korisničko ime ili lozinka nisu ispravni.",
             });
             return;
         }
-        const tokenPayload: TokenPayload = {
+
+        // Store user data in session
+        req.session.user = {
             id: user._id,
             role: user.role,
-        } as const;
-        // Generate a JSON web token with the user id as the payload
-        const token = jwt.sign(tokenPayload, getEnv().JWT_SECRET, {
-            expiresIn: getEnv().TOKEN_EXPIRATION || "1d",
-        });
+            username: user.username,
+        };
 
-        res.status(200).json({
-            message: "Korisnik se uspješno prijavio.",
-            info: { id: user._id, token, username: username, role: user.role },
+        // Commit the session before sending response
+        req.session.save((err) => {
+            if (err) {
+                console.error("Session save error:", err);
+                return res.status(500).json({
+                    message: "Došlo je do pogreške pri prijavi.",
+                });
+            }
+
+            res.status(200).json({
+                message: "Korisnik se uspješno prijavio.",
+                info: {
+                    id: user._id,
+                    username: user.username,
+                    role: user.role,
+                },
+            });
         });
     } catch (err) {
-        // Log the error for internal debugging, but don't expose details to the client
         console.error(`Error in login:\n ${err}`);
         res.status(500).json({
             message: "Došlo je do pogreške na poslužitelju.",

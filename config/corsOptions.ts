@@ -53,6 +53,7 @@ const corsOptions: CorsOptions = {
         }
     },
     optionsSuccessStatus: 200, // For legacy browser support
+    credentials: true,
 } as const;
 
 export default corsOptions;

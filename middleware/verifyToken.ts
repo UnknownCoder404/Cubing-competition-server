@@ -1,33 +1,36 @@
-import jwt from "jsonwebtoken";
 import type { NextFunction, Request, Response } from "express";
-import getEnv from "../utils/getEnv";
-import { TokenPayload } from "../types/token";
 
-// Define a middleware to verify the token
-async function verifyToken(req: Request, res: Response, next: NextFunction) {
+// Updated session-based authentication middleware
+function authenticateSession(req: Request, res: Response, next: NextFunction) {
     try {
-        // Get the token from the request header or from parameters in the URL
-        const token = req.headers["authorization"]
-            ? req.headers["authorization"].replace(/^Bearer\s/, "")
-            : new URLSearchParams(req.url.split("?")[1]).get("token");
-        // Check if the token exists
-        if (!token) {
-            res.status(403).json({
-                message: "Nema tokena. Prijavi se ponovno.",
+        console.log(req.session.user);
+        // Check if user exists in session
+        if (!req.session.user) {
+            return res.status(401).json({
+                message: "Niste prijavljeni. Prijavite se ponovno.",
             });
-            return;
         }
-        // Verify the token with the secret key
-        const decoded = jwt.verify(token, getEnv().JWT_SECRET) as TokenPayload;
-        // Set the user id to the request object
-        req.userId = decoded.id;
-        req.userRole = decoded.role;
-        // Call the next middleware
+
+        // For backward compatibility with existing routes
+        // Consider deprecating these in favor of direct session access
+        req.userId = req.session.user.id;
+        req.userRole = req.session.user.role;
+        console.log("User ID:", req.userId);
+        console.log("User Role:", req.userRole);
+        // Optional: Add user object to request
+        req.user = {
+            id: req.session.user.id,
+            role: req.session.user.role,
+            username: req.session.user.username,
+        };
+
         next();
     } catch (err) {
-        res.status(401).json({
-            message: "Pogrešan token. Pokušajte se ponovno prijaviti.",
+        console.error("Session authentication error:", err);
+        res.status(500).json({
+            message: "Došlo je do pogreške pri provjeri autentičnosti.",
         });
     }
 }
-export default verifyToken;
+
+export default authenticateSession;
