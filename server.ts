@@ -103,6 +103,7 @@ app.use("/competitions", routes.competitionResults);
 app.use("/backup", routes.backup);
 
 app.use("/session", routes.validateSession);
+app.use("/session", routes.logout);
 
 // Server startup
 const PORT = getEnv().PORT || 3000;

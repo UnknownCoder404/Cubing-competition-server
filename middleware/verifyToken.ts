@@ -5,9 +5,10 @@ function authenticateSession(req: Request, res: Response, next: NextFunction) {
     try {
         // Check if user exists in session
         if (!req.session.user) {
-            return res.status(401).json({
+            res.status(401).json({
                 message: "Niste prijavljeni. Prijavite se ponovno.",
             });
+            return;
         }
 
         // For backward compatibility with existing routes

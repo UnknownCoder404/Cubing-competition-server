@@ -14,6 +14,7 @@ export { default as deletePost } from "./posts/delete";
 export { default as editPost } from "./posts/edit";
 export { default as results } from "./excel/results";
 export { default as validateSession } from "./session/validate";
+export { default as logout } from "./session/logout";
 export { default as healthCheck } from "./health_check/health_check";
 export { default as createCompetition } from "./competitions/create";
 export { default as getCompetition } from "./competitions/get";
