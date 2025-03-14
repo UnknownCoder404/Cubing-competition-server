@@ -3,7 +3,7 @@ import Post from "../../Models/post";
 const router = express.Router();
 import isAdmin from "../../utils/helpers/isAdmin";
 import findUser from "../../utils/helpers/findUser";
-import verifyToken from "../../middleware/verifyToken";
+import verifyToken from "../../middleware/authenticateSession";
 
 router.put("/edit/:id", verifyToken, isAdmin, findUser, async (req, res) => {
     try {

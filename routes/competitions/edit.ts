@@ -1,7 +1,7 @@
 import express from "express";
 import Competition from "../../Models/competition";
 import isAdmin from "../../utils/helpers/isAdmin";
-import verifyToken from "../../middleware/verifyToken";
+import verifyToken from "../../middleware/authenticateSession";
 import { AllowedEvent } from "../../config/allowedEvents";
 
 const router = express.Router();

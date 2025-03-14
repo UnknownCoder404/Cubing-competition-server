@@ -1,6 +1,6 @@
 import express from "express";
 import Post from "../../Models/post";
-import verifyToken from "../../middleware/verifyToken";
+import verifyToken from "../../middleware/authenticateSession";
 import isAdmin from "../../utils/helpers/isAdmin";
 import findUser from "../../utils/helpers/findUser";
 import type { IUserDocument } from "../../types/user";

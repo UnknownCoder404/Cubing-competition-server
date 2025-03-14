@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import allowedEvents, { AllowedEvent } from "../../config/allowedEvents";
-import verifyToken from "../../middleware/verifyToken";
+import verifyToken from "../../middleware/authenticateSession";
 import { getUserById } from "../../functions/getUserById";
 import { getCompetitionById } from "../../functions/getCompetitionById";
 import isAdmin from "../../utils/helpers/isAdmin";

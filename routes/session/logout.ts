@@ -1,5 +1,5 @@
 import express from "express";
-import authenticateSession from "../../middleware/verifyToken";
+import authenticateSession from "../../middleware/authenticateSession";
 const router = express.Router();
 
 router.get("/logout", authenticateSession, (req, res) => {

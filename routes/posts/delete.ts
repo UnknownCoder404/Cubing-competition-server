@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import Post from "../../Models/post";
-import verifyToken from "../../middleware/verifyToken";
+import verifyToken from "../../middleware/authenticateSession";
 import isAdmin from "../../utils/helpers/isAdmin";
 const router = express.Router();
 

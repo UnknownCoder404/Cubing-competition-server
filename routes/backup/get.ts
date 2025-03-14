@@ -3,7 +3,7 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 const router = express.Router();
-import verifyToken from "../../middleware/verifyToken";
+import verifyToken from "../../middleware/authenticateSession";
 import isAdmin from "../../utils/helpers/isAdmin";
 import archiver from "archiver";
 

@@ -3,7 +3,7 @@ const router = express.Router();
 import Competition from "../../Models/competition";
 import allowedEvents, { type AllowedEvent } from "../../config/allowedEvents";
 import isAdmin from "../../utils/helpers/isAdmin";
-import verifyToken from "../../middleware/verifyToken";
+import verifyToken from "../../middleware/authenticateSession";
 
 // Define a more specific type for the event object within RequestBody
 type EventType = {
