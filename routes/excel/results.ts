@@ -2,11 +2,11 @@ import express from "express";
 import User from "../../Models/user";
 import { getCompetitionById } from "../../functions/getCompetitionById";
 import getResultsInExcel from "../../routes/excel/results-controller";
-import verifyToken from "../../middleware/authenticateSession";
+import authenticateSession from "../../middleware/authenticateSession";
 import isAdmin from "../../utils/helpers/isAdmin";
 
 const router = express.Router();
-router.get("/", verifyToken, isAdmin, async (req, res) => {
+router.get("/", authenticateSession, isAdmin, async (req, res) => {
     try {
         const queryString = req.url.split("?")[1];
         const params = new URLSearchParams(queryString);

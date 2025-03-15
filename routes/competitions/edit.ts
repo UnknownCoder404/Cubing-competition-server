@@ -1,7 +1,7 @@
 import express from "express";
 import Competition from "../../Models/competition";
 import isAdmin from "../../utils/helpers/isAdmin";
-import verifyToken from "../../middleware/authenticateSession";
+import authenticateSession from "../../middleware/authenticateSession";
 import { AllowedEvent } from "../../config/allowedEvents";
 
 const router = express.Router();
@@ -77,7 +77,7 @@ function validateRequest(
 
 router.put(
     "/:id",
-    verifyToken,
+    authenticateSession,
     isAdmin,
     async (req: express.Request, res: express.Response) => {
         const { id } = req.params;
