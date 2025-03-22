@@ -1,20 +1,19 @@
 {
-  "compilerOptions": {
-    "target": "es2022", // Or a suitable target for your Node.js version
-    "module": "ESNext", // Or "ES2022" etc. for better compatibility
-    "strict": true, // Highly recommended for better type safety
-    "esModuleInterop": true, // For better compatibility with CommonJS modules during transition
-    "skipLibCheck": true, // Can speed up compilation, but might hide some type errors
-    "forceConsistentCasingInFileNames": true, // Enforces consistent casing
-    "moduleResolution": "node",
-    "typeRoots": [
-      "./node_modules/@types"
+    "compilerOptions": {
+        "target": "esnext", // Or a suitable target for your Node.js version
+        "module": "ESNext", // Or "ES2022" etc. for better compatibility
+        "strict": true, // Highly recommended for better type safety
+        "esModuleInterop": true, // For better compatibility with CommonJS modules during transition
+        "skipLibCheck": true, // Can speed up compilation, but might hide some type errors
+        "forceConsistentCasingInFileNames": true, // Enforces consistent casing
+        "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true, // Allow importing .ts files directly.
+        "noEmit": true // Don't emit .js files; Bun handles compilation.
+    },
+    "include": [
+        "./**/*.ts" // Specify the source files
+    ],
+    "exclude": [
+        "node_modules" // Exclude node_modules
     ]
-  },
-  "include": [
-    "./**/*.ts" // Specify the source files
-  ],
-  "exclude": [
-    "node_modules" // Exclude node_modules
-  ]
 }

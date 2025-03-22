@@ -11,12 +11,10 @@ function authenticateSession(req: Request, res: Response, next: NextFunction) {
             return;
         }
 
-        // For backward compatibility with existing routes
-        // Consider deprecating these in favor of direct session access
+        // Make the userId and role available to routes
         req.userId = req.session.user.id;
         req.userRole = req.session.user.role;
 
-        // Optional: Add user object to request
         req.user = {
             id: req.session.user.id,
             role: req.session.user.role,
