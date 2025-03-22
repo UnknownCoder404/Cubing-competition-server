@@ -2,7 +2,7 @@ import express from "express";
 import authenticateSession from "../../middleware/authenticateSession";
 const router = express.Router();
 
-router.get("/logout", authenticateSession, (req, res) => {
+router.post("/logout", authenticateSession, (req, res) => {
     req.session.destroy((err) => {
         if (err) {
             console.error("Error during logout:", err);
