@@ -1,10 +1,10 @@
 import express from "express";
 const router = express.Router();
 import { getCompetitionById } from "../../functions/getCompetitionById";
-import verifyToken from "../../middleware/verifyToken";
+import authenticateSession from "../../middleware/authenticateSession";
 import isAdmin from "../../utils/helpers/isAdmin";
 
-router.post("/:id/lock", verifyToken, isAdmin, async (req, res) => {
+router.post("/:id/lock", authenticateSession, isAdmin, async (req, res) => {
     try {
         const { id } = req.params;
         if (!id) {

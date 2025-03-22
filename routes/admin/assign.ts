@@ -1,9 +1,11 @@
 import express from "express";
 import User from "../../Models/user";
-import verifyToken from "../../middleware/verifyToken";
+import authenticateSession from "../../middleware/authenticateSession";
 import isAdmin from "../../utils/helpers/isAdmin";
+
 const router = express.Router();
-router.post("/:userId", verifyToken, isAdmin, async (req, res) => {
+
+router.post("/:userId", authenticateSession, isAdmin, async (req, res) => {
     try {
         const userId = req.params.userId;
         const user = await User.findOne({ _id: { $eq: userId } });

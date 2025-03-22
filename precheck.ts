@@ -6,7 +6,7 @@ config();
 console.log(`Running ${import.meta.url}`);
 
 // List of required environment variables
-const requiredEnvVars = ["MONGO_URI", "JWT_SECRET"] as const;
+const requiredEnvVars = ["MONGO_URI", "SESSION_SECRET"] as const;
 
 // List of optional environment variables
 const optionalEnvVars = ["PORT"] as const;

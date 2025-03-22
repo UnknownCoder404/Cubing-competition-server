@@ -1,10 +1,10 @@
 import express from "express";
 import User from "../../Models/user";
-import verifyToken from "../../middleware/verifyToken";
+import authenticateSession from "../../middleware/authenticateSession";
 import isAdmin from "../../utils/helpers/isAdmin";
 const router = express.Router();
 
-router.delete("/:userId", verifyToken, isAdmin, async (req, res) => {
+router.delete("/:userId", authenticateSession, isAdmin, async (req, res) => {
     try {
         const userId = req.params.userId; // Id of user to delete
 

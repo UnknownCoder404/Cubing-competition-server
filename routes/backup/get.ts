@@ -3,7 +3,7 @@ import express from "express";
 import fs from "fs";
 import path from "path";
 const router = express.Router();
-import verifyToken from "../../middleware/verifyToken";
+import authenticateSession from "../../middleware/authenticateSession";
 import isAdmin from "../../utils/helpers/isAdmin";
 import archiver from "archiver";
 
@@ -11,7 +11,7 @@ const backupsPath = path.join(__dirname, "../../backups");
 const backupPath = path.join(__dirname, "../../backups.zip");
 zipFolder(backupsPath, backupPath);
 
-router.get("/", verifyToken, isAdmin, async (req, res) => {
+router.get("/", authenticateSession, isAdmin, async (req, res) => {
     try {
         res.status(200).sendFile(backupPath);
         return;

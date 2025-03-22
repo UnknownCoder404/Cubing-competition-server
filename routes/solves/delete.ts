@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import allowedEvents, { AllowedEvent } from "../../config/allowedEvents";
-import verifyToken from "../../middleware/verifyToken";
+import authenticateSession from "../../middleware/authenticateSession";
 import { getUserById } from "../../functions/getUserById";
 import { getCompetitionById } from "../../functions/getCompetitionById";
 import isAdmin from "../../utils/helpers/isAdmin";
@@ -15,7 +15,7 @@ interface DeleteSolveResult {
     message?: string;
 }
 
-router.delete("/:userId", verifyToken, isAdmin, async (req, res) => {
+router.delete("/:userId", authenticateSession, isAdmin, async (req, res) => {
     try {
         const userId = req.params.userId;
         const compToDelete = req.body.competitionId;

@@ -1,11 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
 import Post from "../../Models/post";
-import verifyToken from "../../middleware/verifyToken";
+import authenticateSession from "../../middleware/authenticateSession";
 import isAdmin from "../../utils/helpers/isAdmin";
 const router = express.Router();
 
-router.delete("/delete/:id", verifyToken, isAdmin, async (req, res) => {
+router.delete("/delete/:id", authenticateSession, isAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         if (!id) {

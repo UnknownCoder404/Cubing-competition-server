@@ -1,14 +1,14 @@
 import express from "express";
 import mongoose from "mongoose";
 import Competition from "../../Models/competition";
-import verifyToken from "../../middleware/verifyToken";
+import authenticateSession from "../../middleware/authenticateSession";
 import updateSolves from "../../functions/addSolves";
 import { getUserById } from "../../functions/getUserById";
 import isAdmin from "../../utils/helpers/isAdmin";
 
 const router = express.Router();
 
-router.post("/:solverId", verifyToken, isAdmin, async (req, res) => {
+router.post("/:solverId", authenticateSession, isAdmin, async (req, res) => {
     try {
         const solverId = req.params.solverId;
         const solver = await getUserById(solverId);

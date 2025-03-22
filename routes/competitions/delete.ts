@@ -1,10 +1,10 @@
 import express from "express";
 import Competition from "../../Models/competition";
 import isAdmin from "../../utils/helpers/isAdmin";
-import verifyToken from "../../middleware/verifyToken";
+import authenticateSession from "../../middleware/authenticateSession";
 const router = express.Router();
 
-router.delete("/:id", verifyToken, isAdmin, async (req, res) => {
+router.delete("/:id", authenticateSession, isAdmin, async (req, res) => {
     const { id } = req.params;
     if (!id || typeof id !== "string") {
         res.status(400).json({ message: "ID je krivo unesen ili nedostaje." });
