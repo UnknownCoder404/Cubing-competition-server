@@ -35,7 +35,7 @@ function matchesPrLink(url: string) {
 const allowedOrigins = [
     "http://localhost:2500",
     "http://127.0.0.1:2500",
-    "https://crocubecomp.com",
+    "https://www.crocubecomp.com",
 ];
 
 // CORS middleware function to check the origin against the allowed list
