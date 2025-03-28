@@ -33,7 +33,7 @@ app.use(
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             maxAge: 1000 * 60 * 60 * 24, // 24 hours
-            sameSite: "none",
+            sameSite: "lax",
         },
         // For production, use a proper store like:
         store: MongoStore.create({ mongoUrl: getEnv().MONGO_URI }),
