@@ -16,6 +16,7 @@ import MongoStore from "connect-mongo";
 import { errorHandler } from "./middleware/errorHandler";
 import { setupGlobalErrorHandlers } from "./utils/processHandlers";
 import { setupGracefulShutdown } from "./utils/gracefulShutdown";
+import { sessionErrorHandler } from "./middleware/sessionErrorHandler";
 
 console.log(`Running ${__filename}`);
 dotenv.config();
@@ -118,6 +119,7 @@ app.use("/competitions", routes.results);
 app.use("/system/backup", routes.backup);
 app.use("/system/health", routes.healthCheck);
 
+app.use(sessionErrorHandler);
 app.use(errorHandler);
 
 setupGlobalErrorHandlers();
