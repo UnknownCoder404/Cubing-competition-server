@@ -20,7 +20,7 @@ type RequestBody = {
 };
 
 router.post(
-    "/create",
+    "/",
     authenticateSession,
     isAdmin,
     async (

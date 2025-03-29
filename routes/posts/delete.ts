@@ -5,7 +5,7 @@ import authenticateSession from "../../middleware/authenticateSession";
 import isAdmin from "../../middleware/isAdmin";
 const router = express.Router();
 
-router.delete("/delete/:id", authenticateSession, isAdmin, async (req, res) => {
+router.delete("/:id", authenticateSession, isAdmin, async (req, res) => {
     try {
         const id = req.params.id;
         if (!id) {

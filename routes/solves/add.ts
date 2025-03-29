@@ -10,9 +10,9 @@ const router = express.Router();
 
 router.post("/:solverId", authenticateSession, isAdmin, async (req, res) => {
     try {
-        const solverId = req.params.solverId;
+        const { solverId } = req.params;
         const solver = await getUserById(solverId);
-        const judgeId = req.userId;
+        // const judgeId = req.userId;
         const { solves, round, competitionId } = req.body;
 
         if (!solver) {

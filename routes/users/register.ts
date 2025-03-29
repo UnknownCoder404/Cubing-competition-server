@@ -1,4 +1,4 @@
-import { Router } from "express";
+import express from "express";
 import hashPassword from "../../functions/hashPassword";
 import User from "../../Models/user";
 import authenticateSession from "../../middleware/authenticateSession";
@@ -12,10 +12,10 @@ import {
     checkPasswordSpaces,
 } from "../../functions/registerValidations";
 import registerLimiter from "../../rateLimiter/register";
-const router = Router();
+const router = express.Router();
 // Define a route for user registration
 router.post(
-    "/",
+    "/register",
     registerLimiter,
     authenticateSession,
     isAdmin,
