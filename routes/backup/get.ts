@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 const router = express.Router();
 import authenticateSession from "../../middleware/authenticateSession";
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 import archiver from "archiver";
 
 const backupsPath = path.join(__dirname, "../../backups");

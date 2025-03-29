@@ -5,6 +5,7 @@ import authenticateSession from "../../middleware/authenticateSession";
 import { getUserById } from "../../functions/getUserById";
 import { getCompetitionById } from "../../functions/getCompetitionById";
 import isAdmin from "../../middleware/isAdmin";
+import { IUserDocument } from "../../types/user";
 
 const router = express.Router();
 
