@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import User from "../../Models/user";
+import User from "../Models/user";
 
 async function findUser(req: Request, res: Response, next: NextFunction) {
     try {

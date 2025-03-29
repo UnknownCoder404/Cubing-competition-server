@@ -4,7 +4,7 @@ import allowedEvents, { AllowedEvent } from "../../config/allowedEvents";
 import authenticateSession from "../../middleware/authenticateSession";
 import { getUserById } from "../../functions/getUserById";
 import { getCompetitionById } from "../../functions/getCompetitionById";
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 import { IUserDocument } from "../../types/user";
 
 const router = express.Router();
@@ -15,9 +15,9 @@ interface DeleteSolveResult {
     message?: string;
 }
 
-router.delete("/:userId", authenticateSession, isAdmin, async (req, res) => {
+router.delete("/:id", authenticateSession, isAdmin, async (req, res) => {
     try {
-        const userId = req.params.userId;
+        const solveId = req.params.id;
         const compToDelete = req.body.competitionId;
         const eventToDelete = req.body.event;
         const roundToDelete = req.body.round;
@@ -46,10 +46,10 @@ router.delete("/:userId", authenticateSession, isAdmin, async (req, res) => {
             });
             return;
         }
-        const user = await getUserById(userId);
+        const user = await getUserById(solveId);
         if (!user) {
             res.status(400).json({
-                message: `Korisnik s tim ID-om nije pronađen. ( Naveli ste: ${userId} )`,
+                message: `Korisnik s tim ID-om nije pronađen. ( Naveli ste: ${solveId} )`,
             });
             return;
         }

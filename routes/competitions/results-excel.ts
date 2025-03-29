@@ -1,16 +1,14 @@
 import express from "express";
 import User from "../../Models/user";
 import { getCompetitionById } from "../../functions/getCompetitionById";
-import getResultsInExcel from "../../routes/excel/results-controller";
+import getResultsInExcel from "../excel/results-controller"; // Using the existing controller
 import authenticateSession from "../../middleware/authenticateSession";
 import isAdmin from "../../middleware/isAdmin";
 
 const router = express.Router();
-router.get("/", authenticateSession, isAdmin, async (req, res) => {
+router.get("/:id/results", authenticateSession, isAdmin, async (req, res) => {
     try {
-        const queryString = req.url.split("?")[1];
-        const params = new URLSearchParams(queryString);
-        const competitionId = params.get("competitionId");
+        const competitionId = req.params.id;
 
         if (!competitionId) {
             res.status(400).json({ message: "Competition id not provided." });

@@ -13,6 +13,9 @@ import isRateLimitingEnabled from "./config/isRateLimitingEnabled";
 import * as routes from "./routes";
 import getEnv from "./utils/getEnv";
 import MongoStore from "connect-mongo";
+import { errorHandler } from "./middleware/errorHandler";
+import { setupGlobalErrorHandlers } from "./utils/processHandlers";
+import { setupGracefulShutdown } from "./utils/gracefulShutdown";
 
 console.log(`Running ${__filename}`);
 dotenv.config();
@@ -78,33 +81,52 @@ try {
 console.log("Connected to MongoDB");
 
 // Routes
-app.use("/register", routes.register);
-app.use("/login", routes.login);
-app.use("/admin/assign", routes.assign);
-app.use("/solves/add", routes.addSolve);
-app.use("/solves/delete", routes.deleteSolve);
-app.use("/solves/get", routes.getSolve);
+// Auth routes
+app.use("/auth/login", routes.login);
+app.use("/auth/session", routes.validateSession);
+app.use("/auth/session/logout", routes.logout);
+
+// User routes
 app.use("/users", routes.getAllUsers);
 app.use("/users", routes.getUser);
 app.use("/users", routes.deleteUser);
 app.use("/users", routes.changePassword);
-app.use("/posts", routes.newPost);
+app.use("/users", routes.toggleAdmin);
+app.use("/users", routes.register);
+
+// Solves routes
+app.use("/solves", routes.getSolve);
+app.use("/solves", routes.addSolve);
+app.use("/solves", routes.deleteSolve);
+
+// Posts routes
 app.use("/posts", routes.getPost);
-app.use("/posts", routes.deletePost);
+app.use("/posts", routes.newPost);
 app.use("/posts", routes.editPost);
-app.use("/results", routes.results);
-app.use("/health-check", routes.healthCheck);
-app.use("/competitions", routes.createCompetition);
+app.use("/posts", routes.deletePost);
+
+// Competition routes
 app.use("/competitions", routes.getCompetition);
+app.use("/competitions", routes.createCompetition);
 app.use("/competitions", routes.deleteCompetition);
 app.use("/competitions", routes.editCompetition);
 app.use("/competitions", routes.lockCompetition);
 app.use("/competitions", routes.competitionResults);
-app.use("/backup", routes.backup);
+app.use("/competitions", routes.results);
 
-app.use("/session", routes.validateSession);
-app.use("/session", routes.logout);
+// System routes
+app.use("/system/backup", routes.backup);
+app.use("/system/health", routes.healthCheck);
+
+app.use(errorHandler);
+
+setupGlobalErrorHandlers();
 
 // Server startup
 const PORT = getEnv().PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+const server = app.listen(PORT, () =>
+    console.log(`Server running on port ${PORT}`),
+);
+
+setupGracefulShutdown(server);

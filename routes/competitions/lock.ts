@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import { getCompetitionById } from "../../functions/getCompetitionById";
 import authenticateSession from "../../middleware/authenticateSession";
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 
 router.post("/:id/lock", authenticateSession, isAdmin, async (req, res) => {
     try {
