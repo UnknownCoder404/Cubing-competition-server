@@ -10,6 +10,7 @@ import {
     checkUsernameAndPasswordEquality,
     checkPasswordSpaces,
 } from "../../functions/registerValidations";
+import { invalidateSessions } from "../../utils/invalidateSessions";
 
 router.put(
     "/:userId/password",
@@ -35,9 +36,17 @@ router.put(
             if (res.headersSent) {
                 return;
             }
+
+            // Change password
             user.password = await hashPassword(newPassword);
             await user.save();
-            res.status(200).json({ message: "Lozinka promijenjena." });
+
+            // Delete all sessions for this user
+            await invalidateSessions(userId);
+
+            res.status(200).json({
+                message: "Lozinka promijenjena i sve sesije poništene.",
+            });
             return;
         } catch (error) {
             console.error(error);
