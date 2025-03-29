@@ -3,7 +3,7 @@
     "version": "4.0.0",
     "main": "server.ts",
     "scripts": {
-        "start": "bun run precheck.ts && bun run backup.ts && bun run server.ts",
+        "start": "bun run backup.ts && bun run server.ts",
         "dev": "bun run --watch server.ts",
         "format:write": "prettier . --write --cache",
         "format:check": "prettier . --check --cache",

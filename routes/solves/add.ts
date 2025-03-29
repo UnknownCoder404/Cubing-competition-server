@@ -4,7 +4,7 @@ import Competition from "../../Models/competition";
 import authenticateSession from "../../middleware/authenticateSession";
 import updateSolves from "../../functions/addSolves";
 import { getUserById } from "../../functions/getUserById";
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 
 const router = express.Router();
 

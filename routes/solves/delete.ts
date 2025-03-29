@@ -4,8 +4,7 @@ import allowedEvents, { AllowedEvent } from "../../config/allowedEvents";
 import authenticateSession from "../../middleware/authenticateSession";
 import { getUserById } from "../../functions/getUserById";
 import { getCompetitionById } from "../../functions/getCompetitionById";
-import isAdmin from "../../utils/helpers/isAdmin";
-import { IUserDocument } from "../../types/user";
+import isAdmin from "../../middleware/isAdmin";
 
 const router = express.Router();
 

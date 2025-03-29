@@ -3,7 +3,7 @@ import User from "../../Models/user";
 import authenticateSession from "../../middleware/authenticateSession";
 import hashPassword from "../../functions/hashPassword";
 const router = express.Router();
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 import {
     checkUsernameAndPassword,
     checkPasswordLength,

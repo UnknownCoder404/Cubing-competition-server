@@ -2,7 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import Post from "../../Models/post";
 import authenticateSession from "../../middleware/authenticateSession";
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 const router = express.Router();
 
 router.delete("/delete/:id", authenticateSession, isAdmin, async (req, res) => {

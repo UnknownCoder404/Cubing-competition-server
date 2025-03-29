@@ -1,8 +1,8 @@
 import express from "express";
 import Post from "../../Models/post";
 import authenticateSession from "../../middleware/authenticateSession";
-import isAdmin from "../../utils/helpers/isAdmin";
-import findUser from "../../utils/helpers/findUser";
+import isAdmin from "../../middleware/isAdmin";
+import findUser from "../../middleware/findUser";
 import type { IUserDocument } from "../../types/user";
 
 const router = express.Router();

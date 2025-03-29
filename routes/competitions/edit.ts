@@ -1,6 +1,6 @@
 import express from "express";
 import Competition from "../../Models/competition";
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 import authenticateSession from "../../middleware/authenticateSession";
 import { AllowedEvent } from "../../config/allowedEvents";
 

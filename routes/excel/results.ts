@@ -3,7 +3,7 @@ import User from "../../Models/user";
 import { getCompetitionById } from "../../functions/getCompetitionById";
 import getResultsInExcel from "../../routes/excel/results-controller";
 import authenticateSession from "../../middleware/authenticateSession";
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 
 const router = express.Router();
 router.get("/", authenticateSession, isAdmin, async (req, res) => {

@@ -2,7 +2,7 @@ import { Router } from "express";
 import hashPassword from "../../functions/hashPassword";
 import User from "../../Models/user";
 import authenticateSession from "../../middleware/authenticateSession";
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 import {
     checkUsernameAndPassword,
     checkUsernameLength,

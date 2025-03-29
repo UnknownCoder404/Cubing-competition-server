@@ -13,6 +13,9 @@ import isRateLimitingEnabled from "./config/isRateLimitingEnabled";
 import * as routes from "./routes";
 import getEnv from "./utils/getEnv";
 import MongoStore from "connect-mongo";
+import { errorHandler } from "./middleware/errorHandler";
+import { setupGlobalErrorHandlers } from "./utils/processHandlers";
+import { setupGracefulShutdown } from "./utils/gracefulShutdown";
 
 console.log(`Running ${__filename}`);
 dotenv.config();
@@ -105,6 +108,15 @@ app.use("/backup", routes.backup);
 app.use("/session", routes.validateSession);
 app.use("/session", routes.logout);
 
+app.use(errorHandler);
+
+setupGlobalErrorHandlers();
+
 // Server startup
 const PORT = getEnv().PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+const server = app.listen(PORT, () =>
+    console.log(`Server running on port ${PORT}`),
+);
+
+setupGracefulShutdown(server);

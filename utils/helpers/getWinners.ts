@@ -1,5 +1,3 @@
-import { writeFile } from "fs/promises";
-import path from "path";
 import Competition from "../../Models/competition";
 import User from "../../Models/user";
 // Assuming User and Competition models are defined elsewhere and have Typescript types
@@ -158,12 +156,6 @@ async function getWinners(
 
     // Convert the results to JSON format
     const jsonResults = JSON.stringify(results, null, format ? 2 : 0);
-
-    // Write the JSON results to a file
-    await writeFile(
-        path.join(__dirname, "competition_results.json"),
-        jsonResults,
-    );
     return results;
 }
 
@@ -176,10 +168,3 @@ export async function getWinnersForAllLockedCompetitions(): Promise<Results> {
     const result = await getWinners(competitions, users);
     return result;
 }
-/*async function getWinnersForAllCompetitions() {
-  const competitions = await Competition.find();
-  const users = await User.find();
-  const result = await getWinners(competitions, users);
-  return result;
-}
-*/

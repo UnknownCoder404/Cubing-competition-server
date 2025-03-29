@@ -2,7 +2,7 @@ import express from "express";
 const router = express.Router();
 import Competition from "../../Models/competition";
 import allowedEvents, { type AllowedEvent } from "../../config/allowedEvents";
-import isAdmin from "../../utils/helpers/isAdmin";
+import isAdmin from "../../middleware/isAdmin";
 import authenticateSession from "../../middleware/authenticateSession";
 
 // Define a more specific type for the event object within RequestBody
