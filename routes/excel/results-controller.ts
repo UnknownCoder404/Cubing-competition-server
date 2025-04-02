@@ -141,10 +141,11 @@ function createWorksheetForEvent(
             const groupKeys = Object.keys(groups).sort();
             groupKeys.forEach((grp) => {
                 const groupRows = groups[grp];
-                groupRows.sort((a, b) => a.numericBest - b.numericBest);
+                // Sort rows by numericAverage instead of best time
+                groupRows.sort((a, b) => a.numericAverage - b.numericAverage);
                 groupRows.forEach((row, idx) => {
                     row.rang = idx + 1;
-                    delete row.numericBest;
+                    delete row.numericAverage;
                 });
                 const groupHeader = worksheet.addRow([]);
                 worksheet.mergeCells(
@@ -216,10 +217,30 @@ function createRowForUserRound(
         group: user.group ?? "N/D",
     };
 
+    // Compute best time
     const validSolves = roundSolves.filter((solve) => solve > 0);
     const numericBest = validSolves.length
         ? Math.min(...validSolves)
         : Infinity;
+
+    // Compute numeric average for ranking, using average of middle 3 solves if possible.
+    let numericAverage = Infinity;
+    if (roundSolves.length === 5) {
+        const sortedSolves = roundSolves.slice().sort((a, b) => {
+            if (a === 0 && b === 0) return 0;
+            if (a === 0) return 1;
+            if (b === 0) return -1;
+            return a - b;
+        });
+        const trimmed = sortedSolves.slice(1, sortedSolves.length - 1);
+        // If any of the trimmed solves is DNF (0), treat the average as Infinity.
+        if (trimmed.includes(0)) {
+            numericAverage = Infinity;
+        } else {
+            numericAverage =
+                trimmed.reduce((acc, val) => acc + val, 0) / trimmed.length;
+        }
+    }
 
     for (let i = 0; i < 5; i++) {
         const solve = roundSolves[i];
@@ -233,7 +254,8 @@ function createRowForUserRound(
     }
 
     row.best = numericBest === Infinity ? "DNF" : formatTime(numericBest);
-    row.numericBest = numericBest;
+    // Store numericAverage for ranking based on average time
+    row.numericAverage = numericAverage;
     row.ao5 = getAverage(roundSolves);
 
     return row;
